@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20)
 
 project(test CXX)
 
+# デフォルトのビルドタイプを指定
+if(NOT CMAKE_BUILD_TYPE)        
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+message(STATUS "CMAKE_BUILD_TYPE" = ${CMAKE_BUILD_TYPE})
+
 set(SOURCE_FILES
     src/test.cpp
 )
@@ -11,12 +17,10 @@ add_executable(test ${SOURCE_FILES})
 
 
 # ---------------------------------------
-# Set Qhull
+# Set ConvexHull DLL
 # ---------------------------------------
 
 # DLLファイルのヘッダーファイルとインポートライブラリのパスを設定
-# 下記のように、自動で必要なパッケージを探す方法もあるが、見つけてくれなかった。（Find<PackageName>.cmakeが存在しない？）
-# find_package(Qhull REQUIRED)
 set(CONVEXHULL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/ConvexHull/include)
 
 # Debug/ReleaseでQHULL_LIB_DIRを切り替える。
@@ -29,12 +33,9 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 # ヘッダーファイルのディレクトリをインクルードパスに追加
-# include_directoriesはターゲットの指定ができないため非推奨。
-# include_directories(${QHULL_INCLUDE_DIR})
 target_include_directories(test PUBLIC ${CONVEXHULL_INCLUDE_DIR})
 
-# target_link_libraries(test ${CONVEXHULL_LIB_DIR}/testdll.lib )
-target_link_libraries(test ${PROJECT_SOURCE_DIR}/ConvexHull/lib/testdll.lib )
+target_link_libraries(test ${CONVEXHULL_LIB_DIR}/testlib$<$<CONFIG:Debug>:_d>.lib)
 
 # # Qhull ライブラリをリンク
 # # ${QHULL_LIB_DIR}/qhullstatic_r.libではなく、{QHULL_LIB_DIR}/qhullstatic.libを利用するとnon-reentrantエラーが発生する。
@@ -45,8 +46,8 @@ target_link_libraries(test ${PROJECT_SOURCE_DIR}/ConvexHull/lib/testdll.lib )
 #     target_link_libraries(convex ${QHULL_LIB_DIR}/qhull_r.lib ${QHULL_LIB_DIR}/qhullstatic_r.lib  ${QHULL_LIB_DIR}/qhullcpp.lib)
 # endif()
 
-# # IDE でヘッダーファイルを表示させる
-# target_sources(MakeDll PRIVATE ${HEADER_FILES})
+# IDE でヘッダーファイルを表示させる
+target_sources(test PRIVATE ${HEADER_FILES})
 
 
 # # ---------------------------------------

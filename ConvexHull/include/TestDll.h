@@ -1,4 +1,4 @@
-// DLLのエクスポートを指示するマクロ
+﻿// DLLのエクスポートを指示するマクロ
 #ifdef _WIN32
     #define EXPORT __declspec(dllexport)
 #else
