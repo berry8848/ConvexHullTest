@@ -37,15 +37,6 @@ target_include_directories(test PUBLIC ${CONVEXHULL_INCLUDE_DIR})
 
 target_link_libraries(test ${CONVEXHULL_LIB_DIR}/testlib$<$<CONFIG:Debug>:_d>.lib)
 
-# # Qhull ライブラリをリンク
-# # ${QHULL_LIB_DIR}/qhullstatic_r.libではなく、{QHULL_LIB_DIR}/qhullstatic.libを利用するとnon-reentrantエラーが発生する。
-# # Debug/ReleaseでQHULL_LIB_DIRを切り替える。
-# if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-#     target_link_libraries(convex ${QHULL_LIB_DIR}/qhull_rd.lib ${QHULL_LIB_DIR}/qhullstatic_rd.lib  ${QHULL_LIB_DIR}/qhullcpp_d.lib)
-# elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-#     target_link_libraries(convex ${QHULL_LIB_DIR}/qhull_r.lib ${QHULL_LIB_DIR}/qhullstatic_r.lib  ${QHULL_LIB_DIR}/qhullcpp.lib)
-# endif()
-
 # IDE でヘッダーファイルを表示させる
 target_sources(test PRIVATE ${HEADER_FILES})
 
